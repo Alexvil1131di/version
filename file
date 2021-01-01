@@ -1,2 +1,2 @@
-cedula,nombre,edad,ahorros
-168,melo,26,57.7
+cedula,nombre,edad,ahorros,grado,sexo,estadoCivil
+123,oli,19,5246.78,grado,masculino,soltero

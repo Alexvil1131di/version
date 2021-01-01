@@ -10,6 +10,7 @@ b = 0;
 header = 0;
 word = ""
 x = 0
+data = 0;
 
 def read_string(word,x)  
   while (x < 1)
@@ -36,7 +37,7 @@ def read_string(word,x)
 
     
   end
-  return "#{word}"
+  return word.chomp
 end
 
 def read_int(word,x)  
@@ -112,29 +113,82 @@ end
 
 
 while i < 1 do
-	puts " ingrese su cedula"
-	cedula = read_int(word,x);
+  puts " ingrese su cedula"
+  cedula = read_int(word,x);
 
-	puts " ingrese su nombre"
-	nombre = read_string(word,x);
+  puts " ingrese su nombre"
+  nombre = read_string(word,x);
 
-	puts " ingrese su edad"
-	edad = read_int(word,x)
+  puts "ingrese su edad"
+  edad = read_int(word,x);
 
-	puts " ingrese monto de ahorros"
-	ahorros = read_dec(word,x)
+  data = data | edad.to_i
+  data = data << 4
 
-	puts " introduzca su contraseña"
-	pass = read_pass(word,x);
+  puts "ingrese su sexo m/f"
+  sex = read_string(word,x);
 
-	puts " confirme su contraseña"
-	confirm = read_pass(word,x);
+  if sex == "f" 
+   data = data | 8
+  end
+
+  puts "ingrese su estado civil (casado/soltero)"
+  civilState = read_string(word,x);
+
+  if civilState == "soltero"
+    data = data | 4
+  end
+
+  puts "ingrese su nivel educativo (inicial/medio/grado/postgrado)"
+  grade = read_string(word,x);
+
+  if grade == "medio"
+    data = data | 1
+  elsif grade == "grado"
+    data = data | 2
+  elsif grade == "postgrado"
+    data = data | 3
+  end
+
+  puts " ingrese el monto de sus ahorros"
+  ahorros = read_dec(word,x);
+
+  puts " escriba su contraseña"
+  pass = read_pass(word,x)
+
+  puts " confirme su contraseña"
+  confirm = read_pass(word,x);
+
+  if data.to_i & 1 == 1 
+  nivel = "medio"
+  elsif data.to_i & 2 == 2
+  nivel = "grado"
+  elsif data.to_i  & 3 == 3
+  nivel = "postgrado"
+  elsif data.to_i  & 3 == 0 
+  nivel = "inicial"
+  end
+
+  if data.to_i & 4 == 4 
+  civilState = "soltero"
+  elsif data.to_i & 4 == 0
+  civilState = "casado" 
+  end
+
+  if data.to_i & 8 == 8
+  sex = "femenino"
+  elsif data.to_i & 8 == 0
+  sex = "masculino" 
+  end
+
+  edad = data >> 4
+                  
 
 	if File.exist?(input)
 		if pass == confirm && pass != ""
 
 				CSV.open(input, 'a+') do |csv|
-				csv << [cedula,nombre,edad, ahorros]
+				csv << [cedula,nombre,edad,ahorros,grade,sex,civilState];
 				end
 			else
 				i = i + 1
@@ -143,8 +197,8 @@ while i < 1 do
 	else
 		if pass == confirm && pass != ""
 				CSV.open(input, 'a+') do |csv|
-				csv << ['cedula','nombre','edad','ahorros']
-				csv << [cedula,nombre,edad,ahorros];
+				csv << ['cedula','nombre','edad','ahorros','grado','sexo','estadoCivil']
+				csv << [cedula,nombre,edad,ahorros,grade,sex,civilState];
 				end
 			else
 				i = i + 1		
@@ -187,26 +241,80 @@ table.each do |n|
 			copy = CSV.parse(File.read(input), headers: true)
 			File.delete(input)
 			CSV.open(input, 'a+') do |csv|
-			csv << ['cedula','nombre','edad','ahorros']
+			csv << ['cedula','nombre','edad','ahorros','grado','sexo','estadoCivil']
 
 			copy.each do |m|
 				
 				if copy[b]['cedula'] == busqueda 
 
-					puts " ingrese su cedula"
-					cedula = read_int(word,x);
+                puts " ingrese su cedula"
+                cedula = read_int(word,x);
 
-					puts " ingrese su nombre"
-					nombre = read_string(word,x);
+                puts " ingrese su nombre"
+                nombre = read_string(word,x);
 
-					puts " ingrese su edad"
-					edad = read_int(word,x)
+                puts " ingrese su edad"
+                edad = read_int(word,x)
 
-					puts " ingrese monto de ahorros"
-					ahorros = read_dec(word,x)
+                data = data | edad.to_i
+                data = data << 4
+
+                puts "ingrese su sexo (M/F)"
+                sex == read_string(word,x);
+
+                if sex == "F"
+                    data | 8
+                end
+
+                puts " ingrese el estado civil (casado/soltero)"
+                civilState = read_string(word,x);
+
+                if civilState == "soltero"
+                    data = data | 4
+                end
+
+                puts "ingrese su nivel educativo (inicial/medio/grado/postgrado)"
+                grade = read_string(word,x);
+
+                if grade == "medio"
+                    data = data | 1
+                elsif grade == "grado"
+                    data = data | 2
+                elsif grade == "postgrado"
+                    data = data | 3
+                end
+
+                puts " ingrese monto de ahorros"
+                ahorros = read_dec(word,x)
+
+
+                if data.to_i & 1 == 1
+                    grade = "medio"
+                elsif data.to_i & 2 == 2
+                    grade = "grado"
+                elsif data.to_i & 3 == 3
+                    grade = "postgrado"
+                elsif data.to_i & 3 == 0
+                    grade = "inicial"
+                end
+
+                if data.to_i & 4 == 4
+                    civilState = "soltero"
+                elsif data.to_i & 4 == 0
+                    civilState = "casado"
+                end
+
+                 if data.to_i & 8 == 8
+                    sex = "Femenino"
+                elsif data.to_i & 8 == 0
+                    sex = "masculino"
+                end
+                    
+                edad = data >> 4
+
 
 					CSV.open(input, 'a+')
-					csv << [cedula,nombre,edad,ahorros];
+					csv << [cedula,nombre,edad,ahorros,grade,sex,civilState];
 					b = b + 1;
 				
 				else 
@@ -238,7 +346,7 @@ delete.each do |n|
             copy = CSV.parse(File.read(input), headers: true);
             File.delete(input)
             CSV.open(input, 'a+') do |csv|
-            csv << ['cedula','nombre','edad','ahorros']
+            csv << ['cedula','nombre','edad','ahorros','grado','sexo','estadoCivil']
 
             copy.each do |m|
                 
