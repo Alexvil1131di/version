@@ -1,2 +1,1 @@
-cedula,nombre,edad,ahorros,grado,sexo,estadoCivil
-123,oli,19,5246.78,grado,masculino,soltero
+cedula,nombre,edad,ahorros,grado,sexo,estadoCivil,data,contraseña,confirmacion
