@@ -1,21 +1,47 @@
-input = ARGV.first;
 require 'csv'
 require 'io/console'
 require_relative 'clases.rb'
 
-STDIN.echo = false
 
+input = ARGV.first;
 i = 0;
 a = 0;
 b = 0;
 header = 0;
-word = ""
-x = 0
-data = 0;
+make = 0;
 
-ask = Read.new()
+
+user = Read.new()
+
+if File.exist?(input)
+
+    table = CSV.parse(File.read(input), headers: true)
+
+  end
 
 while(1)
+
+inf = 0
+sup = table.length
+
+      for i in 0..table.length
+        for j in 0..table.length-2
+          if table[j]['cedula'] > table[j+1]['cedula']
+            aux = table[j]
+            table[j] = table[j+1]
+            table[j+1] = aux
+          end
+        end
+      end
+
+      if File.exist?(input)
+
+        puts ""
+        puts "tabla de usuarios"
+        puts table
+        puts ""
+
+      end
 
     puts "seleccione una opcion"
 
@@ -26,169 +52,198 @@ while(1)
     puts "[5] finalizar"
     puts""
 
-    make = ask.read_int("",0);
+    make = user.read_int("",0);
+
 
   case make.to_i
 
-  when 1 #añadir
+    when 1 #añadir
 
-                ask.save("",0,0)
-                cedula = ask.cedula
-                nombre = ask.nombre
-                edad = ask.edad
-                sex = ask.sex
-                civilState = ask.civilState
-                grade = ask.nivel
-                ahorros = ask.ahorros
-                data = ask.data
-                pass = ask.pass
-                confirm = ask.confirm
-                              
+        user.save("",0,0)
+        cedula = user.cedula
+        nombre = user.nombre
+        edad = user.edad
+        sex = user.sex
+        civilState = user.civilState
+        nivel = user.nivel
+        ahorros = user.ahorros
+        data = user.data
+        pass = user.pass
+        confirm = user.confirm
 
-                    if File.exist?(input)
-                      if pass == confirm && pass != ""
-
-                          CSV.open(input, 'a+') do |csv|
-                          csv << [cedula,nombre,edad,ahorros,grade,sex,civilState,data,pass,confirm];
-                          end
-                        else
-                          i = i + 1
-                      end
-                    
-                    else
-                      if pass == confirm && pass != ""
-                          CSV.open(input, 'a+') do |csv|
-                          csv << ['cedula','nombre','edad','ahorros','grado','sexo','estadoCivil','data','contraseña','confirmacion']
-                          csv << [cedula,nombre,edad,ahorros,grade,sex,civilState,data,pass,confirm];
-                          end
-                        else
-                          i = i + 1   
-                      end
-                    end
-
-                          data = 0
-                          table = CSV.parse(File.read(input), headers: true);
-                          puts""
-                          puts table;
-                    puts ""
-
-  when 2 #buscar
-
-    table = CSV.parse(File.read(input), headers: true)
-
-    puts table
-    puts""
-
-    puts "introduzca el numero de cedula que desea buscar ";
-    busqueda = ask.read_int(word,x);
-    puts ""
-
-    table.each do |n|
-
-    	if table[a]['cedula'] == busqueda
-    		puts table[a]
-    	end
-
-    	a = a + 1
-    end
-    	a = 0
-
-  when 3 #editar
-
-    puts "introduzca el numero de cedula que desea editar ";
-    busqueda = ask.read_int(word,x);
-    puts ""
-    table = CSV.parse(File.read(input), headers: true)
-
-    table.each do |n|
-
-    	if table[a]['cedula'] == busqueda
-
-    			copy = CSV.parse(File.read(input), headers: true)
-    			File.delete(input)
-    			CSV.open(input, 'a+') do |csv|
-    			csv << ['cedula','nombre','edad','ahorros','grado','sexo','estadoCivil','data','contraseña','confirmacion']
-
-    			copy.each do |m|
-    				
-    				if copy[b]['cedula'] == busqueda 
-
-                    puts""
-                    ask.save("",0,0)
-                    puts""
-                cedula = ask.cedula
-                nombre = ask.nombre
-                edad = ask.edad
-                sex = ask.sex
-                civilState = ask.civilState
-                grade = ask.nivel
-                ahorros = ask.ahorros
-                data = ask.data
-                pass = ask.pass
-                confirm = ask.confirm
-
-    					CSV.open(input, 'a+')
-    					csv << [cedula,nombre,edad,ahorros,grade,sex,civilState,data,pass,confirm];
-    					b = b + 1;
-    				
-    				else 
-    					CSV.open(input, 'a+')
-    					csv << copy[b]
-    					b = b + 1;	
-    				end
-    			end
-    	end
-    	
-    end
-    a = a + 1
-    end
-
-    a = 0
-    puts""
-
-    delete = CSV.parse(File.read(input), headers: true);
-    puts delete
-
-  when 4 #borrar
-
-    puts "introduzca el numero de cedula que desea eliminar ";
-    busqueda = ask.read_int(word,x);
-    puts ""
-    delete = CSV.parse(File.read(input), headers: true);
-
-    delete.each do |n|
-
-        if delete[a]['cedula'] == busqueda
-
-                copy = CSV.parse(File.read(input), headers: true);
-                File.delete(input)
-                CSV.open(input, 'a+') do |csv|
-                csv << ['cedula','nombre','edad','ahorros','grado','sexo','estadoCivil','data','contraseña','confirmacion']
-
-                copy.each do |m|
-                    
-                    if copy[b]['cedula'] == busqueda 
-
-                        b = b + 1;
-                    
-                    else 
-                        CSV.open(input, 'a+')
-                        csv << copy[b]
-                        b = b + 1;  
-                    end
-                end
-        end
+        if File.exist?(input)
+          if pass == confirm && pass != ""
+              CSV.open(input, 'a+') do |csv|
+              csv << [cedula,nombre,edad,ahorros,nivel,sex,civilState,pass,confirm,data]
+              end
+              i = i + 1   
+            else
+              puts "contraseña incorrecta"
+              i = i + 1
+          end
         
-    end
-    a = a + 1
-    end
+        else
+          if pass == confirm && pass != ""
+              CSV.open(input, 'a+') do |csv|
+              csv << ['cedula','nombre','edad','ahorros','nivel','sexo','civilState','contraseña','Confirmacion','data']
+              csv << [cedula,nombre,edad,ahorros,nivel,sex,civilState,pass,confirm,data]
+              end
+                
+                 
 
-    delete = CSV.parse(File.read(input), headers: true)
-    puts delete
 
-  when 5 #cerrar
+            else
+              puts "contraseña incorrecta"
+               
+          end
+        end
+          if File.exist?(input)
 
-    break
+              table = CSV.parse(File.read(input), headers: true)
+
+            end
+                  
+    when 2 #Buscar
+
+
+      save = Array.new(5) {Array.new()}
+
+      for i in 0..table.length-1
+        place = table[i].hash % 5
+        save[place].push(table[i])
+        puts "#{table[i]}///#{place}"
+        puts""
+      end  
+
+      for j in 0..table.length-1
+        for i in 0..table.length-1
+          print "#{save[j][i]}[#{j}][#{i}]\n"
+          puts ""
+        end
+      end
+
+      puts "introduzca el numero de cedula que desea buscar ";
+      busqueda = user.read_int("",0);
+      puts ""
+
+
+      while (inf < sup) #busqueda binaria
+        mitad = (inf +sup)/2
+
+        if table[mitad]['cedula'] == busqueda
+          print "cedula,nombre,edad,ahorros,nivel,sexo,civilState,contraseña,Confirmacion,data\n"
+          print table[mitad]
+          break
+        end
+
+        if table[mitad]['cedula'] > busqueda
+          sup = mitad
+          mitad = (inf +sup)/2
+        end
+
+        if table[mitad]['cedula'] < busqueda
+          inf = mitad
+          mitad = (inf +sup)/2
+        end
+
+
+      end
+    
+    when 3 #Editar
+
+      puts "introduzca el numero de cedula que desea editar ";
+      busqueda = user.read_int("",0);
+      puts ""
+
+        while (inf < sup) #busqueda binaria
+           mitad = (inf +sup)/2
+
+          if table[mitad]['cedula'] == busqueda
+
+                  user.save("",0,0)
+                  cedula = user.cedula
+                  nombre = user.nombre
+                  edad = user.edad
+                  sex = user.sex
+                  civilState = user.civilState
+                  nivel = user.nivel
+                  ahorros = user.ahorros
+                  data = user.data
+                  pass = user.pass
+                  confirm = user.confirm        
+
+                  table[mitad] = cedula,nombre,edad,ahorros,nivel,sex,civilState,pass,confirm,data
+            break
+          end
+
+          if table[mitad]['cedula'] > busqueda
+            sup = mitad
+            mitad = (inf +sup)/2
+          end
+
+          if table[mitad]['cedula'] < busqueda
+            inf = mitad
+            mitad = (inf +sup)/2
+          end
+        end
+     
+     puts table
+
+     puts ""
+   
+    when 4 #eliminar
+
+      puts "introduzca el numero de cedula que desea eliminar ";
+      busqueda = user.read_int("",0);
+      puts ""
+
+          while (inf < sup) #busqueda binaria
+           mitad = (inf +sup)/2
+
+          if table[mitad]['cedula'] == busqueda
+
+                  del = table
+                  File.chmod(0777, input)
+                  File.delete(input);
+                  CSV.open(input, 'a+') do |csv|
+                  csv << ['cedula','nombre','edad','ahorros','nivel','sexo','civilState','contraseña','Confirmacion','data']
+
+                      del.each do |m|
+                          
+                          if del[b]['cedula'] == busqueda 
+
+                              b = b + 1;
+                          
+                          else 
+                              CSV.open(input, 'a+')
+                              csv << del[b]
+                              b = b + 1;  
+                          end
+                      end
+                  end
+
+            table = CSV.parse(File.read(input), headers: true)
+   
+
+            break
+          end
+
+          if table[mitad]['cedula'] > busqueda
+            sup = mitad
+            mitad = (inf +sup)/2
+          end
+
+          if table[mitad]['cedula'] < busqueda
+            inf = mitad
+            mitad = (inf +sup)/2
+          end
+        end
+
+        table = CSV.parse(File.read(input), headers: true)
+   
+    when 5 #salir
+
+      break;
 
   end
 

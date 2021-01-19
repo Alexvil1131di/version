@@ -1,1 +1,4 @@
-cedula,nombre,edad,ahorros,grado,sexo,estadoCivil,data,contraseña,confirmacion
+cedula,nombre,edad,ahorros,nivel,sexo,civilState,contraseña,Confirmacion,data
+196,olki,199,0.0,inicial,masculino,casado,13,13,3184
+251,olki,199,0.0,inicial,masculino,casado,13,13,3184
+522,kjhg,652,1250.0,inicial,masculino,casado,1,1,10432
